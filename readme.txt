@@ -1,3 +1,5 @@
+rotate a servo arm remotely by rotating your mobile phone
+
 2 files
 
 node app which doubles as socket.io server and serial interface to arduino using johnny-five npm module
