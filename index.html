@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Rotate phone, send angle to server</title>
+        <script src="http://NODESERVERHOSTNAMEORIPADDRESSGOESHERE:8080/socket.io/socket.io.js"></script>
+ 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+</head>
+<body>
+<h1>hello, check for a server hello message below</h1>
+<h1>then rotate your phone</h1>	
+<div id="serverHello"></div>
+<div id="serverMessages"></div>
+</body>
+<script type="text/javascript">
+ 
+$(function(){
+ numOrientationEvents=0; 
+ if(window.DeviceOrientationEvent){alert("cool!");}
+ 
+ socket="";
+ setTimeout(function(){
+   socket=io.connect('http://NODESERVERHOSTNAMEORIPADDRESSGOESHERE:8080');
+   socket.on("hello",function(data){
+     $("#serverHello").html(data.message)
+   });
+   socket.on("message",function(data){
+     $("#serverMessages").html($("#serverMessages").html()+"<h2>"+data.message+"</h2");
+   });
+ 
+   window.addEventListener("deviceorientation",function(eventData){
+     numOrientationEvents+=1;
+     if(numOrientationEvents>1000000){numOrientationEvents=1}
+     if(numOrientationEvents%10==0){
+       socket.emit("angle",{rollAngle:eventData.gamma});
+     }
+   }, false);
+   
+ },1000);
+
+});
+</script>
+</html>
